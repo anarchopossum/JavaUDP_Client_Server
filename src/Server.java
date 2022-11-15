@@ -18,6 +18,8 @@ public class Server {
 		// Sets datapacket info (the data, the size of the data)
         DatagramPacket dataPack = new DatagramPacket(inbox, inbox.length);
 		// fetches the data from the client
+        int count = 0;
+        while(count!=100000){
         dataSock.receive(dataPack);
 		// stores the information from the datapacket
         String mail = new String(dataPack.getData());
@@ -32,6 +34,9 @@ public class Server {
                 mail.getBytes().length, dataPack.getAddress(), dataPack.getPort());
         dataSock.send(returnLetter);
         System.out.println("Letter Sent. :)");
-        dataSock.close();
+        count++;
+        }
+    System.out.println("+++ 100,000 Messages Recived and sent, port is closing... +++");
+    dataSock.close();
     }
 }

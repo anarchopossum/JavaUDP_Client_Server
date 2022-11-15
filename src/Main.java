@@ -12,10 +12,17 @@ public class Main {
          */
         Scanner s = new Scanner(System.in);
         // Asks the User to input Location, port, and message
+        boolean portGate = false;
         System.out.println("Enter IP/Domain Name:");
         String direction = s.nextLine();
-        System.out.println("Enter PortNumber:");
-        String portNum = s.nextLine();
+        int portNum;
+        do {
+            System.out.println("Enter PortNumber (numbers: 0 to 65635):");
+            portNum = Integer.parseInt(s.nextLine());
+            if (portNum >= 0 && portNum <= 65535) {
+                portGate = true;
+            }
+        } while (!portGate);
         System.out.println("Enter the Text you want to Send:");
         String loveLetter = s.nextLine();
         // Creates a DatagramSocket
@@ -24,26 +31,28 @@ public class Main {
         // changes the String to bytes to send over the network
         byte[] Translate = loveLetter.getBytes();
         // Sets up the DatagramPacket with (data,data length, my address, port number)
-        DatagramPacket Postman = new DatagramPacket(Translate, Translate.length, InetAddress.getByName(direction), Integer.parseInt(portNum));
+        DatagramPacket Postman = new DatagramPacket(Translate, Translate.length, InetAddress.getByName(direction), portNum);
         // Sends the packet
-        dataSock.send(Postman);
-        System.out.println("Letter Sent");
+        while (1 == 1) {
+            dataSock.send(Postman);
+            System.out.println("Letter Sent");
 
-        /*
-         * This is where the client will be able to receive data
-         */
-         System.out.println("Waiting on Response...");
-         // Creates a new byte that will hold the received data
-         byte[] reply = new byte[1024];
-         // setup for data being received
-         DatagramPacket box = new DatagramPacket(reply, reply.length);
-         // Actual package is received
-         dataSock.receive(box);
-         // Read the Data from the "box"
-         String readIt = new String(box.getData());
-         System.out.printf(readIt);
-         // Closes the Socket via timeout
-         dataSock.setSoTimeout(3000);
-         System.out.println("\ndone!");
+            /*
+             * This is where the client will be able to receive data
+             */
+            System.out.println("Waiting on Response...");
+            // Creates a new byte that will hold the received data
+            byte[] reply = new byte[1024];
+            // setup for data being received
+            DatagramPacket box = new DatagramPacket(reply, reply.length);
+            // Actual package is received
+            dataSock.receive(box);
+            // Read the Data from the "box"
+            String readIt = new String(box.getData());
+            System.out.printf(readIt);
+            // Closes the Socket via timeout
+            dataSock.setSoTimeout(3000);
+            System.out.println("\nsent!");
+        }
     }
 }
